@@ -1,0 +1,18 @@
+cabal-version:  3.0
+name:           dep-clang
+version:        0.0.0.0
+build-type:     Configure
+
+extra-source-files:
+  dep-clang.buildinfo.in
+  cbits/*.h
+  configure
+  configure.ac
+
+library
+  exposed-modules: DepClang
+  build-depends: base
+  build-tool-depends: hsc2hs:hsc2hs
+  include-dirs: cbits
+  default-language: GHC2021
+  ghc-options: -Wall

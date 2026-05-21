@@ -1,0 +1,4 @@
+packages:
+  demo.cabal
+  dep-clang
+  dep-z
