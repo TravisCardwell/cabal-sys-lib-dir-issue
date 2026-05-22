@@ -26,7 +26,7 @@ $ ldd hs-bindgen-cli | grep libclang
 Reproduction requires multiple versions of the same software, where the
 library for the default is stored in `/usr/lib`.  I have tested on
 [Arch Linux][] using LLVM/Clang 22.1 ([`llvm`][] and [`clang`][] packages)
-and LLVM/Clang 21.1 ([`llvm21`][] and [`clang21`][]) packages.
+and LLVM/Clang 21.1 ([`llvm21`][] and [`clang21`][] packages).
 
 A [minimal demo][] (with a [README][] that contains more detail) has the
 following components:
