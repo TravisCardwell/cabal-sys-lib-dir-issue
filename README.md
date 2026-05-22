@@ -1,9 +1,22 @@
 # Cabal System Library Directory Issue
 
-Cabal configures the `pkg-config` program so that system library directories
-are passed using `-L` command-line options.  When a dependency using a system
-library directory (`/usr/lib`) is ordered before a dependency that requires a
-different library directory, the wrong library may be linked.
+([Cabal issue #11860](https://github.com/haskell/cabal/issues/11860))
+
+Cabal configures the `pkg-config` program using
+[`PKG_CONFIG_ALLOW_SYSTEM_LIBS`][] (in [`pkgConfigProgram`][]), which results
+in `-L/usr/lib` linker options to be used for some packages.  Other software
+may configure a library directory to load a specific version.  When a Haskell
+library/executable has (transitive) dependencies of both types, which library
+is linked depends on the order of linker options, which users have no control
+over and even vary with different Cabal usage.  The Haskell library is
+statically linked, so this can even result in the library/executable being
+linked to two different versions of the same system dependency.
+
+```
+$ ldd hs-bindgen-cli | grep libclang
+        libclang.so.21.1 => /usr/lib/libclang.so.21.1 (0x00007f2ef7e00000)
+        libclang.so.22.1 => /usr/lib/libclang.so.22.1 (0x00007ff723c00000
+```
 
 ## Issue Details
 
@@ -217,7 +230,8 @@ This behavior is not reproduced in this demo.
 [`llvm`]: https://archlinux.org/packages/extra/x86_64/llvm/
 [`llvm21`]: https://archlinux.org/packages/extra/x86_64/llvm21/
 [`pkg-config` manual]: https://linux.die.net/man/1/pkg-config
-[`pkgConfigProgram`]: https://github.com/haskell/cabal/blob/f444d1b9334a09a33b4c340aebfced4f31631aba/Cabal/src/Distribution/Simple/Program/Builtin.hs#L363-L374
+[`PKG_CONFIG_ALLOW_SYSTEM_LIBS`]: https://linux.die.net/man/1/pkg-config
+[`pkgConfigProgram`]: https://github.com/haskell/cabal/blob/cabal-install-v3.16.1.0/Cabal/src/Distribution/Simple/Program/Builtin.hs#L375-L386
 [`zlib`]: https://hackage.haskell.org/package/zlib
 [Arch Linux]: https://archlinux.org/
 [LLVM/Clang]: https://github.com/llvm/llvm-project
