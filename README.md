@@ -110,22 +110,21 @@ $ find dist-newstyle -type f -name 'libHSdep-clang-*.so' \
 ```
 
 The package database for `dep-clang` specifies the `clang` library and the
-`/usr/lib/llvm21/include` include directory.
+`/usr/lib/llvm21/lib` library directory.
 
 ```
 $ ghc-pkg describe --package-db=dist-newstyle/packagedb/ghc-9.10.3 dep-clang
 ...
 extra-libraries:      clang
 ...
-include-dirs:
-    /usr/lib/llvm21/include
-    .../a-dep-clang/cbits
-    .../dist-newstyle/build/x86_64-linux/ghc-9.10.3/dep-clang-0.0.0.0/build/cbits
+library-dirs:
+    .../dist-newstyle/build/x86_64-linux/ghc-9.10.3/dep-clang-0.0.0.0/build
+    /usr/lib/llvm21/lib
 ...
 ```
 
 Executable `demo` depends on library `dep-clang`, so it is also linked with
-`-L/usr/lib/llvm21/include` and `-lclang` options.  If there are no issues
+`-L/usr/lib/llvm21/lib` and `-lclang` options.  If there are no issues
 (described below) then it works fine: the executable is linked to
 `libclang.so.21.1` just like the `dep-clang` library.
 
@@ -157,7 +156,7 @@ Cabal configures the `pkg-config` program to always set the
 > Don't strip `-L/usr/lib` out of libs
 
 Executable `demo` also depends on library `dep-z`, so it is passed
-`-L/usr/lib` in addition to `-L/usr/lib/llvm21/include`.  Which version of the
+`-L/usr/lib` in addition to `-L/usr/lib/llvm21/lib`.  Which version of the
 `clang` shared library that is linked depends on the ordering of these
 options, which users have no control over.
 
